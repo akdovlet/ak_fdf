@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/14 16:26:10 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/01/29 15:28:50 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,9 @@
 # include "mlx.h"
 
 typedef struct s_pixel {
-	int	z;
+	double z;
+	double x;
+	double y;
 	unsigned int	color;
 }	t_pixel;
 
@@ -35,7 +37,8 @@ typedef struct s_data {
 	int		endian;
 }	t_data;
 
-//function that reads the entire file and returns it in a string.
-char	*get_file(int fd);
+//function that reads the entire file and returns it in a list with each node
+// representing a line.
+t_list	*get_file(int fd);
 
 #endif

@@ -6,13 +6,11 @@
 #    By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 13:57:12 by akdovlet          #+#    #+#              #
-#    Updated: 2024/01/14 18:58:24 by akdovlet         ###   ########.fr        #
+#    Updated: 2024/01/29 15:36:06 by akdovlet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = fdf
-
-.EXTRA_PREREQS:= $(abspath $(lastword $(MAKEFILE_LIST)))
 
 LIBFT	= 	libft/libft.a
 PRINTF	=	printf/libftprintf.a
@@ -25,8 +23,8 @@ OBJS := 	$(patsubst source/%.c, object/%.o, $(SRCS))
 DEPS := 	$(OBJS:.o=.d)
 
 
-CC = cc
-CFLAGS = -Wall -Werror -Wextra -MMD -MP -Iinclude -Ilibft/include -Iprintf/include -Imlx_linux
+CC := cc
+CFLAGS := -MMD -MP -Iinclude -Ilibft/include -Iprintf/include -Imlx_linux -g
 
 all: create_dirs $(NAME)
 
@@ -42,17 +40,20 @@ object/%.o: source/%.c
 	@printf "\033[0;32%sm\tCompiling: $<\033[0m\n";
 	@$(CC) $(CFLAGS) -c $< -o $@
 
+# run: $(NAME)
+# 	@./fdf maps/test_maps/t1.fdf
+
 create_dirs:
 	@if [ ! -d "object" ]; then mkdir object; fi
 
 $(LIBFT):
-	@$(MAKE) -sC libft
+	@$(MAKE) -C libft
 
 $(PRINTF):
-	@$(MAKE) -sC printf
+	@$(MAKE) -C printf
 
 $(MLX):
-	@$(MAKE) -sC mlx_linux
+	@$(MAKE) -C mlx_linux
 
 # run: $(NAME)
 # 	./fdf $(runargs)
