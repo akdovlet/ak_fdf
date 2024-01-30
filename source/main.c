@@ -3,23 +3,6 @@
 #include "mlx.h"
 #include "fdf.h"
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-	size_t	y_offset;
-	size_t	x_offset;
-
-	y_offset = y * data->line_length;
-	x_offset = x * (data->bits_per_pixel / 8);
-	dst = &data->addr[y_offset + x_offset];
-	*(unsigned int*)dst = color;
-}
-
-int	create_trgb(int t, int r, int g, int b)
-{
-	return (t << 24 | r << 16 | g << 8 | b);
-}
-
 unsigned int    ft_rainbow(unsigned int nb)
 {
     int r;

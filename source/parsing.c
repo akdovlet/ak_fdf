@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:42:29 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/29 19:15:13 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/01/30 17:37:25 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,19 +47,19 @@ int	count_points(char *str)
 	return (count);
 }
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-	size_t	y_offset;
-	size_t	x_offset;
+// void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+// {
+// 	char	*dst;
+// 	size_t	y_offset;
+// 	size_t	x_offset;
 
-	y_offset = y * data->line_length;
-	x_offset = x * (data->bits_per_pixel / 8);
-	dst = &data->addr[y_offset + x_offset];
-	*(unsigned int*)dst = color;
-}
+// 	y_offset = y * data->line_length;
+// 	x_offset = x * (data->bits_per_pixel / 8);
+// 	dst = &data->addr[y_offset + x_offset];
+// 	*(unsigned int*)dst = color;
+// }
 
-int	ak_superlen(t_list *lst, int *line)
+int	ak_superlen(t_list *lst, int *line, int *rows)
 {
 	int	first;
 	int	superlen;
@@ -79,6 +79,7 @@ int	ak_superlen(t_list *lst, int *line)
 		i++;
 	}
 	*line = i;
+	*rows = first;
 	return (superlen);
 }
 
@@ -113,8 +114,8 @@ int	hex_check(char c)
 unsigned int	ak_atohex(char *str, int *i, int bin)
 {
 	unsigned int hex;
-	char *hex1;
-	char *hex2;
+	char 		*hex1;
+	char 		*hex2;
 
 	hex = 0;
 	hex1 = "0123456789abcdef";
@@ -193,19 +194,18 @@ void	pixel_clear(t_pixel **data, int i)
 	free(data);
 }
 
-t_pixel **data_parser(t_list *lst, int x, int y)
+t_pixel **data_parser(t_list *lst, int points_count, int lines, int rows)
 {
 	int		i;
 	t_pixel	**data;
 	
 	i = 0;
-	data = malloc(sizeof(t_pixel *) * y);
-	x = count_points(lst->content);
+	data = malloc(sizeof(t_pixel *) * lines);
 	if (!data)
 		return (NULL);
 	while (lst)
 	{
-		data[i] = data_filler((char*)lst->content, x, i);
+		data[i] = data_filler((char*)lst->content, rows, i);
 		if (!data[i])
 			return (pixel_clear(data, i), NULL);
 		lst = lst->next;
@@ -253,18 +253,4 @@ t_pixel **data_parser(t_list *lst, int x, int y)
 // 	close(fd);
 // }
 
-//main to display window
-int main(int ac, char **av)
-{
-	t_data img;
-	t_
-	mlx = mlx_init();
-	void *win = mlx_new_window(mlx, 1920, 1080, "Fil de Fer");
-	img.img = mlx_new_image(mlx, 1920, 1080);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-	ft_drawcircle(mlx, win, &img, 960, 540, 535);
-	mlx_put_image_to_window(mlx, win, img.img, 0, 0);
-	mlx_loop(mlx);
-	return (0);
-	
-}
+

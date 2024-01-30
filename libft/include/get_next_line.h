@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/13 22:33:53 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/14 16:29:39 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/01/30 18:32:50 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <unistd.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 42
+#  define BUFFER_SIZE (1024 * 1024)
 # endif
 
 # ifndef FD_MAX

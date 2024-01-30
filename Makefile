@@ -6,7 +6,7 @@
 #    By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 13:57:12 by akdovlet          #+#    #+#              #
-#    Updated: 2024/01/29 15:36:06 by akdovlet         ###   ########.fr        #
+#    Updated: 2024/01/30 16:48:09 by akdovlet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,8 @@ PRINTF	=	printf/libftprintf.a
 MLX 	=	mlx_linux/libmlx.a
 
 SRCS :=		parsing.c	\
-			get_file.c
+			get_file.c	\
+			graphics.c
 SRCS := 	$(addprefix source/, $(SRCS))
 OBJS := 	$(patsubst source/%.c, object/%.o, $(SRCS))
 DEPS := 	$(OBJS:.o=.d)
