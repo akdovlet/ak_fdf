@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/30 18:16:41 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:17:29 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,14 @@
 # include "get_next_line.h"
 # include "mlx.h"
 
+# ifndef WIDTH
+# 	define WIDTH 1920
+# endif
+# ifndef HEIGHT
+# 	define HEIGHT 1080
+#endif
+
+
 typedef struct s_pixel {
 	double z;
 	double x;
@@ -29,16 +37,20 @@ typedef struct s_pixel {
 	unsigned int	color;
 }	t_pixel;
 
+typedef struct s_grid {
+	t_pixel	**pixel;
+	int		rows;
+	int		lines;
+	int gap;
+	int isox;
+	int isoy;
+	int translate;
+}	t_grid;
+
 typedef struct s_mlx {
 	void *mlx;
 	void *win;
 }	t_mlx;
-
-typedef	struct s_limits {
-	int	lines;
-	int	rows;
-	int points_count;
-}	t_limits;
 
 typedef struct s_data {
 	void	*img;
@@ -53,10 +65,10 @@ typedef struct s_data {
 t_list	*get_file(int fd);
 
 // test function for drawing points on the screen
-void	draw_function(t_mlx *mlx, t_data *img, t_pixel	**data, t_limits *limits);
+void	draw_function(t_mlx *mlx, t_data *img, t_grid *grid);
 
 // main driver function for parsing the map
-t_pixel **data_parser(t_list *lst, int points_count, int lines, int rows);
+t_pixel **data_parser(t_list *lst, int lines, int rows);
 // fill each line of data with coordinates
 t_pixel	*data_filler(char *str, int x, int y);
 // free the pixel data

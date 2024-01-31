@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:47:17 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/30 20:49:55 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:28:09 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,15 +49,9 @@ int	close_window(t_mlx *mlx)
 void    my_mlx_pixel_put(t_data *data, int x, int y, unsigned int color)
 {
     char    *dst;
-	int		gap;
 
-	gap = 10;
-    if (x > 1080 || y > 720 || x <= 0 || y <= 0)
+    if (x > WIDTH || y > HEIGHT || x <= 0 || y <= 0)
         return ;
-	while (x * gap > 1080 || y * gap > 720)
-		gap--;
-	x *= gap;
-	y *= gap;
     dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
     *(unsigned int*)dst = color;
 }
@@ -67,19 +61,69 @@ int	create_trgb(int t, int r, int g, int b)
 	return (t << 24 | r << 16 | g << 8 | b);
 }
 
-void	iso_projo(t_pixel **data, t_limits *limits)
+void	centering(t_grid *grid)
+{
+	int	i;
+	int	j;
+	int	x_offset;
+	int	y_offset;
+
+	i = 0;
+	x_offset = (WIDTH - (grid->pixel[grid->lines - 1][grid->rows - 1].x - grid->pixel[0][0].x)) / 2;
+	y_offset = (HEIGHT - (grid->pixel[grid->lines - 1][grid->rows - 1].y - grid->pixel[0][0].y)) / 2;
+	while (i < grid->lines)
+	{
+		j = 0;
+		while (j < grid->rows)
+		{
+			grid->pixel[i][j].x += x_offset;
+			grid->pixel[i][j].y += y_offset;
+			j++;
+		}
+		i++;
+	}
+}
+
+void	iso_projo(t_grid *grid)
+{
+	int		i;
+	int		j;
+	float	isox;
+	float	isoy;
+	float	angle = 0;
+
+	i = 0;
+	isox = (M_PI / 4) + angle;
+	isoy = (M_PI / 4) - angle;
+	while (i < grid->lines)
+	{
+		j = 0;
+		while (j < grid->rows)
+		{
+			grid->pixel[i][j].x = (int)((grid->pixel[i][j].x - grid->pixel[i][j].y) * isox);
+			grid->pixel[i][j].y = (int)((grid->pixel[i][j].y + grid->pixel[i][j].x - 2
+			 * grid->pixel[i][j].z) * isoy);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	draw_function(t_mlx *mlx, t_data *img, t_grid *grid)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	while (i < limits->lines)
+	iso_projo(grid);
+	centering(grid);
+	// gap_m(grid, gap);
+	while (i < grid->lines)
 	{
 		j = 0;
-		while (j < limits->lines)
+		while (j < grid->lines)
 		{
-			data[i][j].x = ((data[i][j].x - data[i][j].z) / sqrt(2));
-			data[i][j].y = ((data[i][j].x + 2*data[i][j].y + data[i][j].z) / sqrt(6));
+			my_mlx_pixel_put(img, grid->pixel[i][j].x, grid->pixel[i][j].y, grid->pixel[i][j].color);
 			// my_mlx_pixel_put(img, j, i, 0xffffffff);
 			j++;
 		}
@@ -87,25 +131,46 @@ void	iso_projo(t_pixel **data, t_limits *limits)
 	}
 }
 
-void	draw_function(t_mlx *mlx, t_data *img, t_pixel	**data, t_limits *limits)
-{
-	int	i;
-	int	j;
+// void gap_m(t_grid *grid, int gap)
+// {
+// 	int	i;
+// 	int	j;
+// 	int x;
 
-	i = 0;
-	iso_projo(data, limits);
-	while (i < limits->lines)
-	{
-		j = 0;
-		while (j < limits->lines)
-		{
-			my_mlx_pixel_put(img, data[i][j].x, data[i][j].y, data[i][j].color);
-			// my_mlx_pixel_put(img, j, i, 0xffffffff);
-			j++;
-		}
-		i++;
-	}
+// 	i = 0;
+// 	while (i < grid->lines)
+// 	{
+// 		j = 0;
+// 		while (j < grid->rows)
+// 		{
+// 			 x = grid->pixel[i][j].x * gap;
+// 			grid->pixel[i][j].y *= gap;
+// 			j++;
+// 		}
+// 		i++;
+// 	}
+// }
+
+// void	zoom(t_mlx *mlx, t_data *img, t_grid *grid)
+// {
+// 	static int gap;
+	
+// 	gap += 1;
+	
+	
+// }
+
+void	hook_manager(t_data *img, t_mlx *mlx, t_grid *grid)
+{
+	draw_function(mlx, img, grid);
+	mlx_put_image_to_window(mlx->mlx, mlx->win, img->img, 0, 0);
+	mlx_hook(mlx->win, 33, 1L<<9, close_window, mlx);
+	mlx_hook(mlx->win, 2, 65307, key_hook, mlx);
+	// mlx_hook(mlx->win, 2, 61, zoom(), mlx);
 }
+
+
+// void	fdf(void)
 
 //main to display window
 int main(int ac, char **av)
@@ -116,26 +181,24 @@ int main(int ac, char **av)
 	int		y;
 	int		fd;
 	t_list	*lst;
-	t_pixel	**pixel;
-	t_limits	limits;
+	// t_pixel	**pixel;
+	t_grid	grid;
 
 	if (ac != 2)
 		return (0);
 	fd = open(av[1], O_RDONLY);
 	lst = get_file(fd);
-	limits.points_count = ak_superlen(lst, &limits.lines, &limits.rows);
-	printf("lines is: %d\nrows is: %d\n", limits.lines, limits.rows);
-	pixel = data_parser(lst, limits.points_count, limits.lines, limits.rows);
+	if (ak_superlen(lst, &grid.lines, &grid.rows) == -1)
+		return (0);
+	// printf("lines is: %d\nrows is: %d\n", grid.lines, grid.rows);
+	grid.pixel = data_parser(lst, grid.lines, grid.rows);
 	mlx.mlx = mlx_init();
-	mlx.win = mlx_new_window(mlx.mlx, 1080, 720, "Fil de Fer");
-	img.img = mlx_new_image(mlx.mlx, 1080, 720);
+	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "Fil de Fer 2: le retour");
+	img.img = mlx_new_image(mlx.mlx, WIDTH, HEIGHT);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	// mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 250, 250);
 	//mlx_key_hook(mlx.win, key_hook, &mlx);
-	draw_function(&mlx, &img, pixel, &limits);
-	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
-	mlx_hook(mlx.win, 33, 1L<<9, close_window, &mlx);
-	mlx_hook(mlx.win, 2, 65307, key_hook, &mlx);
+	hook_manager(&img, &mlx, &grid);
 	// mlx_destroy_image(mlx.mlx, mlx.win);
 	mlx_loop(mlx.mlx);
 	return (0);

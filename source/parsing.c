@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:42:29 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/30 17:37:25 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/01/31 19:02:16 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,28 +59,25 @@ int	count_points(char *str)
 // 	*(unsigned int*)dst = color;
 // }
 
-int	ak_superlen(t_list *lst, int *line, int *rows)
+int	ak_superlen(t_list *lst, int *lines, int *rows)
 {
 	int	first;
-	int	superlen;
 	int	len;
 	int	i;
 
 	first = count_points(lst->content);
-	superlen = 0;
 	i = 0;
 	while (lst)
 	{
 		len = count_points(lst->content);
 		if (len != first)
 			return (-1);
-		superlen += len;
 		lst = lst->next;
 		i++;
 	}
-	*line = i;
+	*lines = i;
 	*rows = first;
-	return (superlen);
+	return (i);
 }
 
 int	ak_atoi(char *str, int *i)
@@ -181,20 +178,7 @@ t_pixel	*data_filler(char *str, int x, int y)
 	return (data);
 }
 
-void	pixel_clear(t_pixel **data, int i)
-{
-	int	j;
-
-	j = 0;
-	while (j < i && data[j])
-	{
-		free(data[j]);
-		j++;
-	}
-	free(data);
-}
-
-t_pixel **data_parser(t_list *lst, int points_count, int lines, int rows)
+t_pixel **data_parser(t_list *lst, int lines, int rows)
 {
 	int		i;
 	t_pixel	**data;
@@ -212,6 +196,19 @@ t_pixel **data_parser(t_list *lst, int points_count, int lines, int rows)
 		i++;
 	}
 	return (data);
+}
+
+void	pixel_clear(t_pixel **data, int i)
+{
+	int	j;
+
+	j = 0;
+	while (j < i && data[j])
+	{
+		free(data[j]);
+		j++;
+	}
+	free(data);
 }
 
 
