@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:47:17 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/02/01 16:12:28 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:21:40 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	key_hook(int keycode, t_mlx *mlx, t_data *img)
 	if (keycode == 65307)
 	{
 		mlx_destroy_window(mlx->mlx, mlx->win);
-		printf("Over\n");
+		printf("AK out\n");
 		exit(1);
 	}
 	else
@@ -113,10 +113,10 @@ void	gap_manager(t_grid *grid)
 
 	spacing = (WIDTH + HEIGHT) / (grid->lines + grid->rows);
 	if (WIDTH < HEIGHT)
-		maxgap = WIDTH / 10;
+		maxgap = WIDTH / 20;
 	else
-		maxgap = HEIGHT / 10;
-	grid->gap = spacing / 3;
+		maxgap = HEIGHT / 20;
+	grid->gap = spacing / 10;
 	if (grid->gap < 1)
 		grid->gap = 1;
 }
@@ -127,14 +127,14 @@ void	draw_function(t_mlx *mlx, t_data *img, t_grid *grid)
 	int	j;
 
 	i = 0;
-	gap_manager(grid);
-	printf("grid gap is: %d\n", grid->gap);
+	// gap_manager(grid);
+	// printf("grid gap is: %d\n", grid->gap);
 	iso_projo(grid);
 	centering(grid);
 	while (i < grid->lines)
 	{
 		j = 0;
-		while (j > grid->rows)
+		while (j < grid->rows)
 		{
 			my_mlx_pixel_put(img, grid->pixel[i][j].x, grid->pixel[i][j].y, grid->pixel[i][j].color);
 			// my_mlx_pixel_put(img, j, i, 0xffffffff);
@@ -178,14 +178,26 @@ int main(int ac, char **av)
 	if (ac != 2)
 		return (0);
 	fd = open(av[1], O_RDONLY);
+	if (fd < 0)
+		return (ft_printf("open failed"), 0);
 	lst = get_file(fd);
-	if (ak_superlen(lst, &grid.lines, &grid.rows) == -1)
-		return (0);
+	if (!lst)
+		return (ft_printf("lst failed"), 0);
 	// printf("lines is: %d\nrows is: %d\n", grid.lines, grid.rows);
+	if (ak_superlen(lst, &grid.lines, &grid.rows) == -1)
+		return (ft_printf("Wrong map"), 0);
 	grid.pixel = data_parser(lst, grid.lines, grid.rows);
+	if (!grid.pixel)
+		return (ft_printf("failed grid malloc"), 0);
 	mlx.mlx = mlx_init();
+	if (!mlx.mlx)
+		return (ft_printf("mlx init failed"), 0);
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "Fil de Fer 2: le retour");
+	if (!mlx.win)
+		return (ft_printf("window init failed"), 0);
 	img.img = mlx_new_image(mlx.mlx, WIDTH, HEIGHT);
+	if (!img.img)
+		return (ft_printf("img init failed"), 0);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
 	// mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
 	//mlx_key_hook(mlx.win, key_hook, &mlx);

@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 19:01:13 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/29 19:13:47 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/02/01 18:20:11 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ t_list	*get_file(int fd)
 	t_list	*lst;
 	t_list	*node;
 	char 	*line;
+
 	lst = NULL;
 	while (1)
 	{
@@ -24,7 +25,7 @@ t_list	*get_file(int fd)
 		if (!line)
 			break ;
 		node = ft_lstnew(ft_strdup(line));
-		if (!node)
+		if (!node || !node->content)
 			return (ft_lstclear(&lst, free), free(line), NULL);
 		ft_lstadd_back(&lst, node);
 		free(line);

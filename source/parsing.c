@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:42:29 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/02/01 16:11:57 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/02/01 19:19:31 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,7 @@ int	ak_superlen(t_list *lst, int *lines, int *rows)
 	while (lst)
 	{
 		len = count_points(lst->content);
+		// ft_printf("amount of points: %d\n", len);
 		if (len != first)
 			return (-1);
 		lst = lst->next;
@@ -77,7 +78,7 @@ int	ak_superlen(t_list *lst, int *lines, int *rows)
 	}
 	*lines = i;
 	*rows = first;
-	return (i);
+	return (1);
 }
 
 int	ak_atoi(char *str, int *i)
@@ -155,7 +156,7 @@ t_pixel	*data_filler(char *str, int x, int y)
 	int		i;
 	int		j;
 
-	data = malloc(sizeof(t_pixel) * (x + 1));
+	data = malloc(sizeof(t_pixel) * x);
 	if (!data)
 		return (NULL);
 	i = 0;
@@ -175,7 +176,6 @@ t_pixel	*data_filler(char *str, int x, int y)
 		else
 			i++;
 	}
-	data[j].end = 1;
 	return (data);
 }
 
