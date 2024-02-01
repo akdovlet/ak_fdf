@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:42:29 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/31 19:02:16 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:11:57 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,7 +155,7 @@ t_pixel	*data_filler(char *str, int x, int y)
 	int		i;
 	int		j;
 
-	data = malloc(sizeof(t_pixel) * x);
+	data = malloc(sizeof(t_pixel) * (x + 1));
 	if (!data)
 		return (NULL);
 	i = 0;
@@ -175,6 +175,7 @@ t_pixel	*data_filler(char *str, int x, int y)
 		else
 			i++;
 	}
+	data[j].end = 1;
 	return (data);
 }
 

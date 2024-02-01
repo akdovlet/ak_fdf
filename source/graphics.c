@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:47:17 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/31 19:28:09 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:12:28 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,11 +56,6 @@ void    my_mlx_pixel_put(t_data *data, int x, int y, unsigned int color)
     *(unsigned int*)dst = color;
 }
 
-int	create_trgb(int t, int r, int g, int b)
-{
-	return (t << 24 | r << 16 | g << 8 | b);
-}
-
 void	centering(t_grid *grid)
 {
 	int	i;
@@ -103,10 +98,27 @@ void	iso_projo(t_grid *grid)
 			grid->pixel[i][j].x = (int)((grid->pixel[i][j].x - grid->pixel[i][j].y) * isox);
 			grid->pixel[i][j].y = (int)((grid->pixel[i][j].y + grid->pixel[i][j].x - 2
 			 * grid->pixel[i][j].z) * isoy);
+			grid->pixel[i][j].x += grid->gap * j;
+            grid->pixel[i][j].y += grid->gap * i;
 			j++;
 		}
 		i++;
 	}
+}
+
+void	gap_manager(t_grid *grid)
+{
+	int	spacing;
+	int	maxgap;
+
+	spacing = (WIDTH + HEIGHT) / (grid->lines + grid->rows);
+	if (WIDTH < HEIGHT)
+		maxgap = WIDTH / 10;
+	else
+		maxgap = HEIGHT / 10;
+	grid->gap = spacing / 3;
+	if (grid->gap < 1)
+		grid->gap = 1;
 }
 
 void	draw_function(t_mlx *mlx, t_data *img, t_grid *grid)
@@ -115,13 +127,14 @@ void	draw_function(t_mlx *mlx, t_data *img, t_grid *grid)
 	int	j;
 
 	i = 0;
+	gap_manager(grid);
+	printf("grid gap is: %d\n", grid->gap);
 	iso_projo(grid);
 	centering(grid);
-	// gap_m(grid, gap);
 	while (i < grid->lines)
 	{
 		j = 0;
-		while (j < grid->lines)
+		while (j > grid->rows)
 		{
 			my_mlx_pixel_put(img, grid->pixel[i][j].x, grid->pixel[i][j].y, grid->pixel[i][j].color);
 			// my_mlx_pixel_put(img, j, i, 0xffffffff);
@@ -131,33 +144,12 @@ void	draw_function(t_mlx *mlx, t_data *img, t_grid *grid)
 	}
 }
 
-// void gap_m(t_grid *grid, int gap)
-// {
-// 	int	i;
-// 	int	j;
-// 	int x;
-
-// 	i = 0;
-// 	while (i < grid->lines)
-// 	{
-// 		j = 0;
-// 		while (j < grid->rows)
-// 		{
-// 			 x = grid->pixel[i][j].x * gap;
-// 			grid->pixel[i][j].y *= gap;
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// }
-
 // void	zoom(t_mlx *mlx, t_data *img, t_grid *grid)
 // {
 // 	static int gap;
 	
 // 	gap += 1;
-	
-	
+
 // }
 
 void	hook_manager(t_data *img, t_mlx *mlx, t_grid *grid)
@@ -181,7 +173,6 @@ int main(int ac, char **av)
 	int		y;
 	int		fd;
 	t_list	*lst;
-	// t_pixel	**pixel;
 	t_grid	grid;
 
 	if (ac != 2)
@@ -196,7 +187,7 @@ int main(int ac, char **av)
 	mlx.win = mlx_new_window(mlx.mlx, WIDTH, HEIGHT, "Fil de Fer 2: le retour");
 	img.img = mlx_new_image(mlx.mlx, WIDTH, HEIGHT);
 	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length, &img.endian);
-	// mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 250, 250);
+	// mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
 	//mlx_key_hook(mlx.win, key_hook, &mlx);
 	hook_manager(&img, &mlx, &grid);
 	// mlx_destroy_image(mlx.mlx, mlx.win);

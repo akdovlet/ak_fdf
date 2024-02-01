@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/01/31 19:17:29 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/02/01 16:13:09 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,12 +21,13 @@
 # include "libft.h"
 # include "get_next_line.h"
 # include "mlx.h"
+# include <stdbool.h>
 
 # ifndef WIDTH
-# 	define WIDTH 1920
+# 	define WIDTH 1600
 # endif
 # ifndef HEIGHT
-# 	define HEIGHT 1080
+# 	define HEIGHT 900
 #endif
 
 
@@ -41,10 +42,10 @@ typedef struct s_grid {
 	t_pixel	**pixel;
 	int		rows;
 	int		lines;
-	int gap;
-	int isox;
-	int isoy;
-	int translate;
+	int 	gap;
+	int 	isox;
+	int 	isoy;
+	int 	translate;
 }	t_grid;
 
 typedef struct s_mlx {
