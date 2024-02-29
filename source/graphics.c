@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:47:17 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/02/23 19:30:28 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/02/29 20:23:34 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,36 +127,30 @@ void	hook_manager(t_img *img, t_mlx *mlx)
 	// mlx_hook(mlx->win, 33, 1L<<9, close_window, mlx);
 }
 
-int	handle_no_event(t_mlx *mlx)
+int	handle_no_event(t_data *data)
 {
 	return (0);
 }
-
-int handle_input(int keycode, t_mlx *mlx)
-{
-	if (keycode == 65307)
-	{
-		mlx_destroy_window(mlx->mlx, mlx->win);
-		mlx->win = NULL;
-	}
-	return (0);
-}
-
 
 void	init_data(t_mlx *mlx, t_img *img)
 {
-	mlx->mlx = mlx_init();
-	mlx->win = mlx_new_window(mlx->mlx, WIDTH, HEIGHT, "Fil de Fer");
-	img->img = mlx_new_image(mlx->mlx, WIDTH, HEIGHT);
-	img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length, &img->endian);
+	mlx->mlx_ptr = mlx_init();
+	if (!mlx->mlx_ptr)
+		return ;
+	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, WIDTH, HEIGHT, "Fil de Fer");
+	if (!mlx->win_ptr)
+		return ;
+	img->img_ptr = mlx_new_image(mlx->mlx_ptr, WIDTH, HEIGHT);
+	if (!img->img_ptr)
+		return ;
+	img->addr = mlx_get_data_addr(img->img_ptr, &img->bits_per_pixel, &img->line_length, &img->endian);
 }
 
 int	file_and_parse(char *av, t_grid *grid)
 {
-	int	fd;
+	int		fd;
 	t_list	*lst;
 
-	*grid = (t_grid){};
 	fd = open(av, O_RDONLY);
 	if (fd < 0)
 		return (-1);
@@ -173,29 +167,55 @@ int	file_and_parse(char *av, t_grid *grid)
 	return (1);
 }
 
+// typedef struct s_data {
+// 	t_mlx	mlx;
+// 	t_grid	grid;
+// }	t_data;
+
+void	clear_all(t_grid *grid, t_mlx *mlx)
+{
+	pixel_clear(grid->pixel, grid->rows);
+	mlx_destroy_image(mlx->mlx_ptr, mlx->img.img_ptr);
+	mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
+	mlx_destroy_display(mlx->mlx_ptr);
+}
+
+int	key_hook(int keycode, t_data *data)
+{
+	if (keycode == 65307)
+	{
+		clear_all(&data->grid, &data->mlx);
+		exit(0);
+	}
+	else if (keycode == 61)
+	{
+		printf("gap in main funct is: %d\n", data->grid.gap);
+		data->grid.gap += 1;
+		draw_function(&data->mlx, &data->mlx.img, &data->grid);
+		mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img.img_ptr, 0, 0);
+	}
+	return (0);
+}
+
 //main to display window
 int main(int ac, char **av)
 {
-	t_img	img;
-	t_mlx	mlx;
-	t_grid	grid;
+	t_data data;
 
 	if (ac != 2)
 		return (0);
-	file_and_parse(av[1], &grid);
-	init_data(&mlx, &img);
-	gap_manager(&grid);
-	draw_function(&mlx, &img, &grid);
-	mlx_put_image_to_window(mlx.mlx, mlx.win, img.img, 0, 0);
-	mlx_loop_hook(mlx.mlx, &handle_no_event, &mlx);
-	mlx_key_hook(mlx.win, &handle_input, &mlx);
-	// mlx_hook(mlx.win, 2, 65307, key_hook, &mlx);
-	// mlx_key_hook(mlx.win, zoom, &mlx);
-	// mlx_hook(mlx.win, 33, 1L<<9, close_window, &mlx);
-	mlx_loop(mlx.mlx);
-	mlx_loop_end(mlx.mlx);
-	pixel_clear(grid.pixel, grid.rows);
-	mlx_destroy_image(mlx.mlx, img.img);
-	mlx_destroy_display(mlx.mlx);
+	file_and_parse(av[1], &data.grid);
+	init_data(&data.mlx, &data.mlx.img);
+	gap_manager(&data.grid);
+	draw_function(&data.mlx, &data.mlx.img, &data.grid);
+	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.mlx.img.img_ptr, 0, 0);
+	mlx_loop_hook(data.mlx.mlx_ptr, &handle_no_event, &data);
+	mlx_hook(data.mlx.win_ptr, 2, 65307, key_hook, &data);
+	printf("gap after hook is: %d\n", data.grid.gap);
+	mlx_loop(data.mlx.mlx_ptr);
+	// pixel_clear(data.grid.pixel, data.grid.rows);
+	// mlx_destroy_image(data.mlx.mlx, data.mlx.img.img);
+	// mlx_destroy_window(data.mlx.mlx, data.mlx.win);
+	// mlx_destroy_display(data.mlx.mlx);
 	return (0);
 }

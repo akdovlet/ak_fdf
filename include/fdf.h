@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/02/23 19:10:52 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/02/29 19:34:30 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ typedef struct s_grid {
 }	t_grid;
 
 typedef struct s_img {
-	void	*img;
+	void	*img_ptr;
 	char	*addr;
 	int		bits_per_pixel;
 	int		line_length;
@@ -57,9 +57,15 @@ typedef struct s_img {
 }	t_img;
 
 typedef struct s_mlx {
-	void *mlx;
-	void *win;
+	void *mlx_ptr;
+	void *win_ptr;
+	t_img img;
 }	t_mlx;
+
+typedef struct s_data {
+	t_mlx	mlx;
+	t_grid	grid;
+}	t_data;
 
 //function that reads the entire file and returns it in a list with each node
 // representing a line.
@@ -93,9 +99,7 @@ int	ak_atoi(char *str, int *i);
 int	ak_superlen(t_list *lst, int *line, int *rows);
 
 // function to set the pixel correctly inside of the window
-// void	my_mlx_pixel_put(t_img *img, int x, int y, unsigned int color);
 void    ak_mlx_pixel_put(t_img *data, int x, int y, unsigned int color);
-
 
 // function that will parse a line in a map and return how many points are in there
 // used by ak_superlen();

@@ -128,7 +128,8 @@ void	ft_drawcircle(void *mlx, void *win, t_data *img, int x, int y, int r, unsig
 
 //     data.x = x;
 //     data.y = y;
-//     data.z = z;
+//     data.z = z;ble y;
+	uns
 //     data.c = color;
 //     return (data);
 // }
