@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:42:29 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/02/29 18:38:30 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/05 15:34:52 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,6 @@ int	ak_superlen(t_list *lst, int *lines, int *rows)
 	while (lst)
 	{
 		len = count_points(lst->content);
-		// ft_printf("amount of points: %d\n", len);
 		if (len != first)
 			return (-1);
 		lst = lst->next;
@@ -144,10 +143,10 @@ unsigned int	color_manager(char *str, int *i)
 			(*i) += 2;
 			return (ak_atohex(str, i, 0));
 		}
-		return (16777215);
+		return (0x33FF33);
 	}
 	else
-		return (16777215);
+		return (0x33FF33);
 }
 
 t_pixel	*data_filler(char *str, int x, int y)

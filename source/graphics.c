@@ -6,11 +6,12 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:47:17 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/02/29 20:23:34 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/05 18:26:39 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include <math.h>
 
 // void	ak_mlx_pixel_put(t_img *img, int x, int y, unsigned int color)
 // {
@@ -36,7 +37,7 @@ void    ak_mlx_pixel_put(t_img *data, int x, int y, unsigned int color)
     *(unsigned int*)dst = color;
 }
 
-void	centering(t_grid *grid)
+void	centering(t_grid *grid, t_pixel **pixel)
 {
 	int	i;
 	int	j;
@@ -44,22 +45,22 @@ void	centering(t_grid *grid)
 	int	y_offset;
 
 	i = 0;
-	x_offset = (WIDTH - (grid->pixel[grid->lines - 1][grid->rows - 1].x - grid->pixel[0][0].x)) / 2;
-	y_offset = (HEIGHT - (grid->pixel[grid->lines - 1][grid->rows - 1].y - grid->pixel[0][0].y)) / 2;
+	x_offset = (WIDTH - (pixel[grid->lines - 1][grid->rows - 1].x - pixel[0][0].x)) / 2;
+	y_offset = (HEIGHT - (pixel[grid->lines - 1][grid->rows - 1].y - pixel[0][0].y)) / 2;
 	while (i < grid->lines)
 	{
 		j = 0;
 		while (j < grid->rows)
 		{
-			grid->pixel[i][j].x += x_offset;
-			grid->pixel[i][j].y += y_offset;
+			pixel[i][j].x += x_offset;
+			pixel[i][j].y += y_offset;
 			j++;
 		}
 		i++;
 	}
 }
 
-void	iso_projo(t_grid *grid)
+void	iso_projo(t_grid *grid, t_pixel **pixel)
 {
 	int		i;
 	int		j;
@@ -75,11 +76,11 @@ void	iso_projo(t_grid *grid)
 		j = 0;
 		while (j < grid->rows)
 		{
-			grid->pixel[i][j].x *= grid->gap;
-            grid->pixel[i][j].y *= grid->gap;
-			grid->pixel[i][j].x = (int)((grid->pixel[i][j].x - grid->pixel[i][j].y) * isox);
-			grid->pixel[i][j].y = (int)((grid->pixel[i][j].y + grid->pixel[i][j].x - 2
-			 * grid->pixel[i][j].z) * isoy);
+			pixel[i][j].x *= grid->gap;
+			pixel[i][j].y *= grid->gap;
+			pixel[i][j].x = (int)((pixel[i][j].x - pixel[i][j].y) * isox);
+			pixel[i][j].y = (int)((pixel[i][j].y + pixel[i][j].x - 2
+			 * pixel[i][j].z) * isoy);
 			j++;
 		}
 		i++;
@@ -101,20 +102,18 @@ void	gap_manager(t_grid *grid)
 		grid->gap = 1;
 }
 
-void	draw_function(t_mlx *mlx, t_img *img, t_grid *grid)
+void	draw_function(t_mlx *mlx, t_img *img, t_grid *grid, t_pixel **pixel)
 {
 	int	i;
 	int	j;
 
 	i = 0;
-	iso_projo(grid);
-	centering(grid);
 	while (i < grid->lines)
 	{
 		j = 0;
 		while (j < grid->rows)
 		{
-			ak_mlx_pixel_put(img, grid->pixel[i][j].x, grid->pixel[i][j].y, grid->pixel[i][j].color);
+			ak_mlx_pixel_put(img, pixel[i][j].x, pixel[i][j].y, pixel[i][j].color);
 			j++;
 		}
 		i++;
@@ -130,6 +129,35 @@ void	hook_manager(t_img *img, t_mlx *mlx)
 int	handle_no_event(t_data *data)
 {
 	return (0);
+}
+
+t_pixel **copy_pixel(t_pixel **pixel, t_grid *grid)
+{
+	int	i;
+	int	j;
+	t_pixel **copy;
+
+	i = 0;
+	copy = malloc(sizeof(t_pixel *) * grid->lines);
+	if (!copy)
+		return (NULL);
+	while (i < grid->lines)
+	{
+		j = 0;
+		copy[i] = malloc(sizeof(t_pixel) * grid->rows);
+		if (!copy[i])
+			return (pixel_clear(copy, i), NULL);		
+		while (j < grid->rows)
+		{
+			copy[i][j].x = pixel[i][j].x;
+			copy[i][j].y = pixel[i][j].y;
+			copy[i][j].z = pixel[i][j].z;
+			copy[i][j].color = pixel[i][j].color;
+			j++;
+		}
+		i++;
+	}
+	return (copy);
 }
 
 void	init_data(t_mlx *mlx, t_img *img)
@@ -174,10 +202,39 @@ int	file_and_parse(char *av, t_grid *grid)
 
 void	clear_all(t_grid *grid, t_mlx *mlx)
 {
-	pixel_clear(grid->pixel, grid->rows);
+	pixel_clear(grid->pixel, grid->lines);
+	pixel_clear(grid->copy, grid->lines);
 	mlx_destroy_image(mlx->mlx_ptr, mlx->img.img_ptr);
 	mlx_destroy_window(mlx->mlx_ptr, mlx->win_ptr);
 	mlx_destroy_display(mlx->mlx_ptr);
+}
+
+void	clear_image(t_mlx *mlx, t_img *img, t_grid *grid, t_pixel **pixel)
+{
+	if (!pixel)
+		return ;
+	int	i;
+	int	j;
+	
+	i = 0;
+	while (i < grid->lines)
+	{
+		j = 0;
+		while (j < grid->rows)
+		{
+			ak_mlx_pixel_put(img, pixel[i][j].x, pixel[i][j].y, 0);
+			j++;
+		}
+		i++;
+	}
+}
+
+void	draw_frame(t_data *data)
+{
+	data->grid.copy = copy_pixel(data->grid.pixel, &data->grid);
+	iso_projo(&data->grid, data->grid.copy);
+	centering(&data->grid, data->grid.copy);
+	draw_function(&data->mlx, &data->mlx.img, &data->grid, data->grid.copy);
 }
 
 int	key_hook(int keycode, t_data *data)
@@ -187,11 +244,11 @@ int	key_hook(int keycode, t_data *data)
 		clear_all(&data->grid, &data->mlx);
 		exit(0);
 	}
-	else if (keycode == 61)
+	if (keycode == 61)
 	{
-		printf("gap in main funct is: %d\n", data->grid.gap);
+		clear_image(&data->mlx, &data->mlx.img, &data->grid, data->grid.copy);
 		data->grid.gap += 1;
-		draw_function(&data->mlx, &data->mlx.img, &data->grid);
+		draw_frame(data);
 		mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img.img_ptr, 0, 0);
 	}
 	return (0);
@@ -201,17 +258,16 @@ int	key_hook(int keycode, t_data *data)
 int main(int ac, char **av)
 {
 	t_data data;
-
 	if (ac != 2)
 		return (0);
-	file_and_parse(av[1], &data.grid);
+	if (file_and_parse(av[1], &data.grid) <= 0)
+		return (0);
 	init_data(&data.mlx, &data.mlx.img);
 	gap_manager(&data.grid);
-	draw_function(&data.mlx, &data.mlx.img, &data.grid);
+	draw_frame(&data);
 	mlx_put_image_to_window(data.mlx.mlx_ptr, data.mlx.win_ptr, data.mlx.img.img_ptr, 0, 0);
 	mlx_loop_hook(data.mlx.mlx_ptr, &handle_no_event, &data);
 	mlx_hook(data.mlx.win_ptr, 2, 65307, key_hook, &data);
-	printf("gap after hook is: %d\n", data.grid.gap);
 	mlx_loop(data.mlx.mlx_ptr);
 	// pixel_clear(data.grid.pixel, data.grid.rows);
 	// mlx_destroy_image(data.mlx.mlx, data.mlx.img.img);
