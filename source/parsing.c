@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:42:29 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/05 15:34:52 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/12 15:41:46 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -164,9 +164,9 @@ t_pixel	*data_filler(char *str, int x, int y)
 	{
 		if (str[i] && char_check(str[i]))
 		{
-			data[j].x = j;
-			data[j].y = y;
-			data[j].z = ak_atoi(str, &i);
+			data[j].x[0] = j;
+			data[j].y[0] = y;
+			data[j].z[0] = ak_atoi(str, &i);
 			data[j].color = color_manager(str, &i);
 			j++;
 			while (str[i] && char_check(str[i]))

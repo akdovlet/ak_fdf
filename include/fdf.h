@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/05 17:13:09 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/12 20:39:09 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,21 +32,22 @@
 
 
 typedef struct s_pixel {
-	double z;
-	double x;
-	double y;
-	unsigned int	color;
+	int z[2];
+	int x[2];
+	int y[2];
+	unsigned int color;
 }	t_pixel;
 
 typedef struct s_grid {
 	t_pixel	**pixel;
-	t_pixel **copy;
 	int		rows;
 	int		lines;
-	int 	gap;
+	double 	gap;
 	int 	isox;
 	int 	isoy;
 	int 	translate;
+	int		z;
+	float	scaling;
 }	t_grid;
 
 typedef struct s_img {
