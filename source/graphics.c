@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:47:17 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/12 20:45:36 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/13 18:43:32 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@
 // 	*(unsigned int*)dst = color;
 // }
 
-void    ak_mlx_pixel_put(t_img *data, int x, int y, unsigned int color)
+void    ak_mlx_pixel_put(t_img *data, double x, double y, unsigned int color)
 {
     char    *dst;
 
     if (x > WIDTH || y > HEIGHT || x <= 0 || y <= 0)
         return ;
-    dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+    dst = data->addr + (int)(round(y) * data->line_length + round(x) * (data->bits_per_pixel / 8));
     *(unsigned int*)dst = color;
 }
 
@@ -66,21 +66,23 @@ void	iso_projo(t_grid *grid, t_pixel **pixel)
 {
 	int		i;
 	int		j;
-	float	isox;
-	float	isoy;
+	double	isox;
+	double	isoy;
 	float	angle = 0;
 
 	i = 0;
 	isox = (M_PI / 4) + angle;
 	isoy = (M_PI / 4) - angle;
+	// isox = 1;
+	// isoy = 1;
 	while (i < grid->lines)
 	{
 		j = 0;
 		while (j < grid->rows)
 		{
-			pixel[i][j].x[1] = (int)((pixel[i][j].x[0] - pixel[i][j].y[0]) * isox);
-			pixel[i][j].y[1] = (int)((pixel[i][j].y[0] + pixel[i][j].x[0] - 2
-			 * pixel[i][j].z[0]) * isoy);
+			pixel[i][j].x[1] =  pixel[i][j].x[0] - pixel[i][j].y[0] * isox;
+			pixel[i][j].y[1] =  (pixel[i][j].y[0] + pixel[i][j].x[0] - 2
+			 * pixel[i][j].z[0]) * isoy;
 			pixel[i][j].x[1] = (pixel[i][j].x[1] * grid->scaling) + (1 * pixel[i][j].x[1]);
 			pixel[i][j].y[1] = (pixel[i][j].y[1] * grid->scaling) + (1 * pixel[i][j].y[1]);
 			j++;
@@ -91,7 +93,6 @@ void	iso_projo(t_grid *grid, t_pixel **pixel)
 
 void	gap_manager(t_grid *grid)
 {
-	double	spacing;
 	float ewidth;
 	float eheight;
 
@@ -100,40 +101,76 @@ void	gap_manager(t_grid *grid)
 	grid->scaling = fminf((float)WIDTH / ewidth, (float)HEIGHT / eheight);
 }
 
-void	draw_line(t_pixel p1, t_pixel p2, t_img *img)
-{
-	int dx;
-	int dy;
-	int sx;
-	int sy;
-	int err;
+// void	draw_line(t_pixel p1, t_pixel p2, t_img *img)
+// {
+// 	int dx;
+// 	int dy;
+// 	int sx;
+// 	int sy;
+// 	int err;
+// 	int er2;
 
-	dx = abs(p2.x[1] - p1.x[1]);
-	dy = abs(p2.y[1] - p1.y[1]);
-	if (p1.x[1] < p2.x[1])
-		sx = 1;
-	else
-		sx = -1;
-	if (p1.y[1] < p2.y[1])
-		sy = 1;
-	else
-		sy = -1;
-	err = dx - dy;
-	while (p1.x[1] != p2.x[1] || p1.y[1] != p2.y[1])
+// 	dx = abs(p2.x[1] - p1.x[1]);
+// 	dy = abs(p2.y[1] - p1.y[1]);
+// 	if (p1.x[1] < p2.x[1])
+// 		sx = 1;
+// 	else
+// 		sx = -1;
+// 	if (p1.y[1] < p2.y[1])
+// 		sy = 1;
+// 	else
+// 		sy = -1;
+// 	err = dx - dy;
+// 	while (p1.x[1] != p2.x[1] || p1.y[1] != p2.y[1])
+// 	{
+// 		ak_mlx_pixel_put(img, p1.x[1], p1.y[1], p1.color);
+// 		er2 = 2 * err;
+// 		if (er2 > -dy)
+// 		{
+// 			err -= dy;
+// 			p1.x[1] += sx;
+// 		}
+// 		if (er2 < dx && err != 0)
+// 		{
+// 			err += dx;
+// 			p1.y[1] += sy;
+// 		}
+// 	}
+// }
+
+void    draw_line(t_pixel p1, t_pixel p2, t_img *img)
+{
+	int x0, x1, y0, y1;
+	x0 = p1.x[1];
+	x1 = p2.x[1];	
+	y0 = p1.y[1];
+	y1 = p2.y[1];
+    int dx = abs(x1 - x0);
+    int dy = abs(y1 - y0);
+    int sx = (x1 >= x0) ? 1 : -1;
+    int sy = (y1 >= y0) ? 1 : -1;
+    int err = dx - dy;
+	int i = 0;
+	int len = (dx > dy) ? dx : dy;
+
+    while (i < len)
 	{
-		ak_mlx_pixel_put(img, p1.x[1], p1.y[1], p1.color);
-		if (2 * err > -dy)
-		{
-			err -= dy;
-			p1.x[1] += sx;
-		}
-		else
-		{
-			err += dx;
-			p1.y[1] += sy;
-		}
-	}
+        ak_mlx_pixel_put(img, x0, y0, p1.color);
+        int e2 = 2 * err;
+
+        if (e2 > -dy) {
+            err -= dy;
+            x0 += sx;
+        }
+
+        if (e2 < dx) {
+            err += dx;
+            y0 += sy;
+        }
+		i++;
+    }
 }
+
 
 void	draw_function(t_mlx *mlx, t_img *img, t_grid *grid, t_pixel **pixel)
 {
@@ -141,14 +178,16 @@ void	draw_function(t_mlx *mlx, t_img *img, t_grid *grid, t_pixel **pixel)
 	int	j;
 
 	i = 0;
-	while (i < grid->lines - 1)
+	while (i < grid->lines)
 	{
 		j = 0;
-		while (j < grid->rows - 1)
+		while (j < grid->rows)
 		{
-			ak_mlx_pixel_put(img, pixel[i][j].x[1], pixel[i][j].y[1], pixel[i][j].color);
-			draw_line(pixel[i][j], pixel[i][j + 1], img);
-			draw_line(pixel[i][j], pixel[i + 1][j], img);
+			// ak_mlx_pixel_put(img, pixel[i][j].x[1], pixel[i][j].y[1], pixel[i][j].color);
+			if (j +1 < grid->rows)
+				draw_line(pixel[i][j], pixel[i][j + 1], img);
+			if (i + 1 < grid->lines)
+				draw_line(pixel[i][j], pixel[i + 1][j], img);
 			j++;
 		}
 		i++;
@@ -200,12 +239,13 @@ void	clear_all(t_grid *grid, t_mlx *mlx)
 	ft_printf("AK out!\n");
 }
 
-void	draw_frame(t_data *data)
+int	draw_frame(t_data *data)
 {
 	iso_projo(&data->grid, data->grid.pixel);
 	centering(&data->grid, data->grid.pixel);
 	draw_function(&data->mlx, &data->mlx.img, &data->grid, data->grid.pixel);
 	mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img.img_ptr, 0, 0);
+	return (0);
 }
 
 void	next_frame(t_mlx *mlx, t_img *img)
@@ -218,7 +258,7 @@ void	next_frame(t_mlx *mlx, t_img *img)
 	
 }
 
-void	set_zed(t_grid *grid, int z)
+void	set_zed(t_grid *grid, double z)
 {
 	int	i;
 	int	j;
@@ -229,7 +269,7 @@ void	set_zed(t_grid *grid, int z)
 		j = 0;
 		while (j < grid->rows)
 		{
-			grid->pixel[i][j].z[0] = grid->pixel[i][j].z[0] - z;
+			grid->pixel[i][j].z[0] = grid->pixel[i][j].z[0] / z;
 			j++;
 		}
 		i++;
@@ -241,18 +281,12 @@ int	key_hook(int keysym, t_data *data)
 	if (keysym == XK_Escape)
 	{
 		mlx_loop_end(data->mlx.mlx_ptr);
-		return (0);
 	}
-	else if (keysym == XK_F2)
-		ft_printf("good day of work");
 	else if (keysym == XK_z)
 	{
-		ft_printf("z");
 		next_frame(&data->mlx, &data->mlx.img);
-		data->grid.z += 1;
+		data->grid.z += 0.3;
 		set_zed(&data->grid, data->grid.z);
-		draw_frame(data);
-		mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img.img_ptr, 0, 0);
 	}
 	return (0);
 }
@@ -268,19 +302,19 @@ int	mouse_hook(int button, int x, int y, t_data *data)
 	if (button == 4)
 	{
 		next_frame(&data->mlx, &data->mlx.img);
-		data->grid.scaling += 1;
-		draw_frame(data);
-		mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img.img_ptr, 0, 0);
+		data->grid.scaling += 0.3;
+		// draw_frame(data);
+		// mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img.img_ptr, 0, 0);
 	}
 	else if (button == 5)
 	{
 		if (data->grid.scaling > 0)
-			data->grid.scaling -= 1;
+			data->grid.scaling -= 0.3;
 		else
 			return (0);
 		next_frame(&data->mlx, &data->mlx.img);
-		draw_frame(data);
-		mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img.img_ptr, 0, 0);
+		// draw_frame(data);
+		// mlx_put_image_to_window(data->mlx.mlx_ptr, data->mlx.win_ptr, data->mlx.img.img_ptr, 0, 0);
 	}
 	return (0);
 }
@@ -304,7 +338,8 @@ int main(int ac, char **av)
 		return (0);
 	init_data(&data.mlx, &data.mlx.img);
 	gap_manager(&data.grid);
-	draw_frame(&data);
+	// draw_frame(&data);
+	mlx_loop_hook(data.mlx.mlx_ptr, draw_frame, &data);
 	handle_input(&data);
 	mlx_loop(data.mlx.mlx_ptr);
 	clear_all(&data.grid, &data.mlx);
