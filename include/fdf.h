@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/13 18:43:23 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/14 18:53:36 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,9 @@ typedef struct s_grid {
 	int		rows;
 	int		lines;
 	double		z;
-	double	scaling;
+	double		scaling;
+	int			x_offset;
+	int			y_offset;
 }	t_grid;
 
 typedef struct s_img {
@@ -97,7 +99,7 @@ int	ak_atoi(char *str, int *i);
 int	ak_superlen(t_list *lst, int *line, int *rows);
 
 // function to set the pixel correctly inside of the window
-void    ak_mlx_pixel_put(t_img *data, double x, double y, unsigned int color);
+void	ak_mlx_pixel_put(t_img *data, int x, int y, unsigned int color);
 
 // function that will parse a line in a map and return how many points are in there
 // used by ak_superlen();
