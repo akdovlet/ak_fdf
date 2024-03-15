@@ -6,7 +6,7 @@
 #    By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 13:57:12 by akdovlet          #+#    #+#              #
-#    Updated: 2024/02/28 17:38:02 by akdovlet         ###   ########.fr        #
+#    Updated: 2024/03/15 16:21:42 by akdovlet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,11 @@ MLX 	=	mlx_linux/libmlx.a
 
 SRCS :=		parsing.c	\
 			get_file.c	\
-			graphics.c
+			graphics.c	\
+			main.c		\
+			input_manager.c	\
+			parsing_utils.c	\
+			pixel_malloc.c
 SRCS := 	$(addprefix source/, $(SRCS))
 OBJS := 	$(patsubst source/%.c, object/%.o, $(SRCS))
 DEPS := 	$(OBJS:.o=.d)

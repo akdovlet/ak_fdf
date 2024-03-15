@@ -6,28 +6,28 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/14 18:53:36 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/15 19:29:26 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-# include <fcntl.h>
-# include <unistd.h>
-# include <math.h>
-# include <stdio.h>
+// # include <fcntl.h>
+// # include <unistd.h>
+// # include <math.h>
+// # include <stdio.h>
 # include "ft_printf.h"
 # include "libft.h"
-# include "get_next_line.h"
 # include "mlx.h"
-# include <stdbool.h>
+# include "get_next_line.h"
+// # include <stdbool.h>
 
 # ifndef WIDTH
-# 	define WIDTH 1600
+# 	define WIDTH 1920
 # endif
 # ifndef HEIGHT
-# 	define HEIGHT 900
+# 	define HEIGHT 1080
 #endif
 
 
@@ -42,10 +42,12 @@ typedef struct s_grid {
 	t_pixel	**pixel;
 	int		rows;
 	int		lines;
-	double		z;
-	double		scaling;
-	int			x_offset;
-	int			y_offset;
+	double	z;
+	double	scaling;
+	double	x_iso;
+	double	y_iso;
+	int		x_offset;
+	int		y_offset;
 }	t_grid;
 
 typedef struct s_img {
@@ -67,19 +69,88 @@ typedef struct s_data {
 	t_grid	grid;
 }	t_data;
 
-//function that reads the entire file and returns it in a list with each node
-// representing a line.
-t_list	*get_file(int fd);
+/* ************************************************************************** */
+/* ******************************GRAPHICAL*********************************** */
+/* ************************************************************************** */
+
+// Setup mlx
+void	init_data(t_mlx *mlx, t_img *img);
 
 // test function for drawing points on the screen
 void	draw_function(t_mlx *mlx, t_img *img, t_grid *grid, t_pixel **pixel);
 
-// main driver function for parsing the map
-t_pixel **data_parser(t_list *lst, int lines, int rows);
-// fill each line of data with coordinates
-t_pixel	*data_filler(char *str, int x, int y);
-// free the pixel data
-void	pixel_clear(t_pixel **data, int i);
+// Draw black pixels everywhere
+void	background(t_img *img);
+
+// function to set the pixel correctly inside of the window
+void	ak_mlx_pixel_put(t_img *data, int x, int y, unsigned int color);
+
+// Will draw a frame
+int	draw_frame(t_data *data);
+
+/* ************************************************************************** */
+/* ******************************MATH**************************************** */
+/* ************************************************************************** */
+
+// Bresenham line drawing algorythm
+void    draw_line2(t_pixel p1, t_pixel p2, t_img *img);
+
+// Initialise every value to their starting points
+void	set_values(t_grid *grid);
+
+// will decide on a decent gap between each points
+double	gap_manager(t_grid *grid);
+
+// will calculate the offset needed to center the drawing on the window
+void	centering(t_grid *grid, t_pixel **pixel);
+
+// Will do the math for isometric view
+void	iso_projo(t_grid *grid, t_pixel **pixel);
+
+/* ************************************************************************** */
+/* ******************************INPUT*************************************** */
+/* ************************************************************************** */
+
+// function to manage the scroll wheel input
+int	mouse_hook(int button, int x, int y, t_data *data);
+
+//main input driver function
+void	handle_input(t_data *data);
+
+// function that will handle keyboard inputs
+int	key_hook(int keysym, t_data *data);
+
+// function to close the window on X top right
+int	x_button(t_data *data);
+
+/* ************************************************************************** */
+/* *******************************MEMORY************************************* */
+/* ************************************************************************** */
+
+void	clear_all(t_grid *grid, t_mlx *mlx);
+
+/* ************************************************************************** */
+/* ******************************PARSING************************************* */
+/* ************************************************************************** */
+
+//function that reads the entire file and returns it in a list with each node
+// representing a line.
+t_list	*get_file(int fd);
+
+// read the file and call every parsing function
+int	file_and_parse(char *av, t_grid *grid);
+
+// function that will parse a line in a map and return how many points are in there
+// used by ak_superlen();
+int	count_points(char *str);
+
+// function to check if the given char is a character of a given dataset
+int	char_check(char c);
+
+// super function to count total points, lines and rows in a given map
+// pointers to int used to return multiple values in one functino call
+// not arrays!
+int	ak_superlen(t_list *lst, int *line, int *rows);
 
 // will return the color in a decimal int
 unsigned int	color_manager(char *str, int *i);
@@ -93,18 +164,15 @@ int	hex_check(char c);
 // my own atoi that will additionally move the index of i
 int	ak_atoi(char *str, int *i);
 
-// super function to count total points, lines and rows in a given map
-// pointers to int used to return multiple values in one functino call
-// not arrays!
-int	ak_superlen(t_list *lst, int *line, int *rows);
+/* ******************************PARSING & MALLOCS*************************** */
 
-// function to set the pixel correctly inside of the window
-void	ak_mlx_pixel_put(t_img *data, int x, int y, unsigned int color);
+// main driver function for parsing the map
+t_pixel **data_parser(t_list *lst, int lines, int rows);
 
-// function that will parse a line in a map and return how many points are in there
-// used by ak_superlen();
-int	count_points(char *str);
+// fill each line of data with coordinates
+t_pixel	*data_filler(char *str, int x, int y);
 
-// function to check if the given char is a character of a given dataset
-int	char_check(char c);
+// free the pixel data
+void	pixel_clear(t_pixel **data, int i);
+
 #endif

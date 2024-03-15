@@ -6,16 +6,13 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:42:29 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/12 15:41:46 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/15 16:57:06 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
 #include "fdf.h"
 #include <fcntl.h>
-#include <unistd.h>
-#include <math.h>
-#include <stdio.h>
 
 int	char_check(char c)
 {
@@ -46,18 +43,6 @@ int	count_points(char *str)
 	}
 	return (count);
 }
-
-// void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-// {
-// 	char	*dst;
-// 	size_t	y_offset;
-// 	size_t	x_offset;
-
-// 	y_offset = y * data->line_length;
-// 	x_offset = x * (data->bits_per_pixel / 8);
-// 	dst = &data->addr[y_offset + x_offset];
-// 	*(unsigned int*)dst = color;
-// }
 
 int	ak_superlen(t_list *lst, int *lines, int *rows)
 {
@@ -100,117 +85,27 @@ int	ak_atoi(char *str, int *i)
 	return (n * sign);
 }
 
-int	hex_check(char c)
+int	file_and_parse(char *av, t_grid *grid)
 {
-	if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')
-		|| (c >= 'A' && c <= 'F'))
-		return (1);
-	return (0);
+	int		fd;
+	t_list	*lst;
+
+	fd = open(av, O_RDONLY);
+	if (fd < 0)
+		return (-1);
+	lst = get_file(fd);
+	if (!lst)
+		return (-2);
+	close(fd);
+	if (ak_superlen(lst, &grid->lines, &grid->rows) == -1)
+		return (ft_lstclear(&lst, free), ft_printf("Wrong map"), 0);
+	grid->pixel = data_parser(lst, grid->lines, grid->rows);
+	if (!grid->pixel)
+		return (ft_printf("failed grid malloc"), -3);
+	ft_lstclear(&lst, free);
+	grid->z = 1;
+	return (1);
 }
-
-unsigned int	ak_atohex(char *str, int *i, int bin)
-{
-	unsigned int hex;
-	char 		*hex1;
-	char 		*hex2;
-
-	hex = 0;
-	hex1 = "0123456789abcdef";
-	hex2 = "0123456789ABCDEF";
-	while (str[*i] && hex_check(str[*i]))
-	{
-		if (bin)
-			hex = hex * 16 + ak_strchr(hex2, str[*i]);
-		else
-			hex = hex * 16 + ak_strchr(hex1, str[*i]);
-		(*i)++;
-	}
-	return (hex);
-}
-
-unsigned int	color_manager(char *str, int *i)
-{
-	if (str[*i] == ',')
-	{
-		(*i)++;
-		if (str[*i] == '0' && str[(*i) + 1] == 'X')
-		{
-			(*i) += 2;
-			return (ak_atohex(str, i, 1));
-		}
-		else if (str[*i] == '0' && str[(*i) + 1] == 'x')
-		{
-			(*i) += 2;
-			return (ak_atohex(str, i, 0));
-		}
-		return (0x33FF33);
-	}
-	else
-		return (0x33FF33);
-}
-
-t_pixel	*data_filler(char *str, int x, int y)
-{
-	t_pixel *data;
-	int		i;
-	int		j;
-
-	data = malloc(sizeof(t_pixel) * x);
-	if (!data)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (str[i])
-	{
-		if (str[i] && char_check(str[i]))
-		{
-			data[j].x[0] = j;
-			data[j].y[0] = y;
-			data[j].z[0] = ak_atoi(str, &i);
-			data[j].color = color_manager(str, &i);
-			j++;
-			while (str[i] && char_check(str[i]))
-				i++;
-		}
-		else
-			i++;
-	}
-	return (data);
-}
-
-t_pixel **data_parser(t_list *lst, int lines, int rows)
-{
-	int		i;
-	t_pixel	**data;
-	
-	i = 0;
-	data = malloc(sizeof(t_pixel *) * lines);
-	if (!data)
-		return (NULL);
-	while (lst)
-	{
-		data[i] = data_filler((char*)lst->content, rows, i);
-		if (!data[i])
-			return (pixel_clear(data, i), NULL);
-		lst = lst->next;
-		i++;
-	}
-	return (data);
-}
-
-void	pixel_clear(t_pixel **data, int i)
-{
-	int	j;
-
-	j = 0;
-	while (j < i && data[j])
-	{
-		free(data[j]);
-		j++;
-	}
-	free(data);
-}
-
 
 //print the parsing data main
 // int main(int ac, char **av)
