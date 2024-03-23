@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:42:29 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/15 16:57:06 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/22 18:20:33 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,18 +92,17 @@ int	file_and_parse(char *av, t_grid *grid)
 
 	fd = open(av, O_RDONLY);
 	if (fd < 0)
-		return (-1);
+		return (ft_printf("Open failed\n"), 0);
 	lst = get_file(fd);
 	if (!lst)
-		return (-2);
+		return (ft_printf("Lst malloc failed\n"), 0);
 	close(fd);
 	if (ak_superlen(lst, &grid->lines, &grid->rows) == -1)
-		return (ft_lstclear(&lst, free), ft_printf("Wrong map"), 0);
+		return (ft_lstclear(&lst, free), ft_printf("Map Invalid"), 0);
 	grid->pixel = data_parser(lst, grid->lines, grid->rows);
 	if (!grid->pixel)
-		return (ft_printf("failed grid malloc"), -3);
+		return (ft_printf("failed grid malloc"), 0);
 	ft_lstclear(&lst, free);
-	grid->z = 1;
 	return (1);
 }
 

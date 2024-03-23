@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/15 19:29:26 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/23 19:36:30 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,20 @@
 // # include <stdbool.h>
 
 # ifndef WIDTH
-# 	define WIDTH 1920
+# 	define WIDTH 1280
 # endif
 # ifndef HEIGHT
-# 	define HEIGHT 1080
+# 	define HEIGHT 720
 #endif
 
+
+typedef struct s_bres {
+	double dx;
+	double dy;
+	double sx;
+	double sy;
+	double err;
+}	t_bres;
 
 typedef struct s_pixel {
 	double z[2];
@@ -46,6 +54,8 @@ typedef struct s_grid {
 	double	scaling;
 	double	x_iso;
 	double	y_iso;
+	double	z_iso;
+	double	angle;
 	int		x_offset;
 	int		y_offset;
 }	t_grid;
@@ -74,7 +84,7 @@ typedef struct s_data {
 /* ************************************************************************** */
 
 // Setup mlx
-void	init_data(t_mlx *mlx, t_img *img);
+int	init_mlx(t_mlx *mlx, t_img *img);
 
 // test function for drawing points on the screen
 void	draw_function(t_mlx *mlx, t_img *img, t_grid *grid, t_pixel **pixel);
@@ -83,7 +93,7 @@ void	draw_function(t_mlx *mlx, t_img *img, t_grid *grid, t_pixel **pixel);
 void	background(t_img *img);
 
 // function to set the pixel correctly inside of the window
-void	ak_mlx_pixel_put(t_img *data, int x, int y, unsigned int color);
+void	ak_mlx_pixel_put(t_img *data, double x, double y, unsigned int color);
 
 // Will draw a frame
 int	draw_frame(t_data *data);
@@ -107,6 +117,13 @@ void	centering(t_grid *grid, t_pixel **pixel);
 // Will do the math for isometric view
 void	iso_projo(t_grid *grid, t_pixel **pixel);
 
+// int	color_gradient(int start_color, int end_color, int len, int pos);
+int color_gradient(t_pixel color1, t_pixel color2, int total_steps, int current_step);
+
+void	rotate_x(t_pixel *pixel, double angle, double z_scale);
+void	rotate_y(t_pixel *pixel, double angle);
+void	rotate_z(t_pixel *pixel, double angle);
+
 /* ************************************************************************** */
 /* ******************************INPUT*************************************** */
 /* ************************************************************************** */
@@ -127,6 +144,7 @@ int	x_button(t_data *data);
 /* *******************************MEMORY************************************* */
 /* ************************************************************************** */
 
+// Free all the allocated memory including mlx mallocs
 void	clear_all(t_grid *grid, t_mlx *mlx);
 
 /* ************************************************************************** */
@@ -156,7 +174,7 @@ int	ak_superlen(t_list *lst, int *line, int *rows);
 unsigned int	color_manager(char *str, int *i);
 
 // will return a decimal int from a string in hex
-unsigned int	ak_atohex(char *str, int *i, int bin);
+unsigned int	ak_atohex(char *str, int *i);
 
 // will check if the character is in the hex base
 int	hex_check(char c);
