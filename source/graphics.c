@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:47:17 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/23 19:46:48 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/26 20:03:54 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 
 int	is_within_bounds(int x, int y)
 {
-	if (x > WIDTH || y > HEIGHT || x < 0 || y < 0)
+	if (x >= WIDTH || y >= HEIGHT || x < 0 || y < 0)
         return (0);
 	return (1);
 }
@@ -75,10 +75,10 @@ void	set_values(t_grid *grid)
 	grid->x_offset = 0;
 	grid->y_offset = 0;
 	grid->scaling = gap_manager(grid);
-	grid->x_iso = 1;
-	grid->y_iso = 1;
-	grid->z_iso = 1;
-	grid->z = 1;
+	grid->x_iso = 220;
+	grid->y_iso = 160;
+	grid->z_iso = 170;
+	grid->z = 0.1;
 }
 
 void	iso_projo(t_grid *grid, t_pixel **pixel)
@@ -88,11 +88,19 @@ void	iso_projo(t_grid *grid, t_pixel **pixel)
 	double angle_x;
 	double angle_y;
 	double angle_z;
+	t_quat	qx;
+	t_quat	qy;
+	t_quat	qz;
+	t_quat multiplied;
 
 	y = 0;
+	multiplied = quat_init(1.0f, 0.0f, 0.0f, 0.0f);
 	angle_x = fmod(grid->x_iso, 360);
 	angle_y = fmod(grid->y_iso, 360);
 	angle_z = fmod(grid->z_iso, 360);
+	qx = quat_rotate_x(angle_x);
+	qy = quat_rotate_y(angle_y);
+	qz = quat_rotate_z(angle_z);
 	while (y < grid->lines)
 	{
 		x = 0;
@@ -100,9 +108,17 @@ void	iso_projo(t_grid *grid, t_pixel **pixel)
 		{
 			// pixel[y][x].x[1] = grid->scaling * ((x - y) * (cos(angle_x * M_PI / 180)));
 			// pixel[y][x].y[1] = grid->scaling * (((x + y) * (sin(angle_y * M_PI / 180))) - (pixel[y][x].z[0] * grid->z));
-			rotate_x(&pixel[y][x], angle_y * M_PI / (double)180,grid->z);
-			rotate_y(&pixel[y][x], angle_x * M_PI/ (double)180);
-			rotate_z(&pixel[y][x], angle_z * M_PI / (double)180);
+			rotate_x(&pixel[y][x], angle_x,grid->z);
+			rotate_y(&pixel[y][x], angle_y);
+			rotate_z(&pixel[y][x], angle_z, grid->z);
+
+			// // // multiplied = quat_multiply(multiplied, quat_rotate_x(angle_x));
+			// // // multiplied = quat_normalize(multiplied);
+			// // // multiplied = quat_multiply(multiplied, quat_rotate_y(angle_y));
+			// // // multiplied = quat_normalize(multiplied);
+			// quat_rotate(qx, &pixel[y][x]);
+			// quat_rotate_2(qy, &pixel[y][x]);
+			// quat_rotate_2(qz, &pixel[y][x]);
 			pixel[y][x].x[1] *= grid->scaling;
 			pixel[y][x].y[1] *= grid->scaling;
 			x++;
@@ -156,7 +172,7 @@ void    draw_line2(t_pixel p1, t_pixel p2, t_img *img)
 		i++;
     }
 }
-#include <stdio.h>
+
 void	draw_function(t_mlx *mlx, t_img *img, t_grid *grid, t_pixel **pixel)
 {
 	int	i;

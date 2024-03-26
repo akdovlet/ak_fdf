@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/09 19:01:13 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/02/01 18:20:11 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/25 19:09:22 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ t_list	*get_file(int fd)
 	char 	*line;
 
 	lst = NULL;
+	node =  NULL;
 	while (1)
 	{
 		line = get_next_line(fd);

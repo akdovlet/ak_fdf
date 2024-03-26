@@ -6,30 +6,12 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:53:24 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/22 17:37:13 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/24 16:46:09 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
-
-// int	color_gradient(int start_color, int end_color, int line, int pos)
-// {
-// 	// if (start_color == end_color)
-// 	// 	return (start_color);
-// 	double	grad[3];
-// 	int		new[3];
-// 	int		new_color;
-
-// 	grad[0] = (double)((end_color >> 16) - (start_color >> 16));
-// 	grad[1] = (double)(((end_color >> 8) & 0xFF) - ((start_color >> 8) & 0xFF));
-// 	grad[2] = (double)((end_color & 0xFF) - (start_color & 0xFF));
-// 	new[0] = start_color + (pos * grad[0]);
-// 	new[1] = start_color + (pos * grad[1]);
-// 	new[2] = start_color + (pos * grad[2]);
-// 	new_color = (new[0]  << 16) | (new[1] << 8) | new[2];
-// 	return (new_color);
-// }
 
 int color_gradient(t_pixel color1, t_pixel color2, int total_steps, int current_step) {
   // Normalize current step to range [0.0, 1.0]

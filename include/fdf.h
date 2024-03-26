@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/23 19:36:30 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/26 20:07:23 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,18 @@
 // # include <stdbool.h>
 
 # ifndef WIDTH
-# 	define WIDTH 1280
+# 	define WIDTH 1920
 # endif
 # ifndef HEIGHT
-# 	define HEIGHT 720
+# 	define HEIGHT 1080
 #endif
 
+typedef struct s_quat {
+	double w;
+	double x;
+	double y;
+	double z;
+}	t_quat;
 
 typedef struct s_bres {
 	double dx;
@@ -122,7 +128,21 @@ int color_gradient(t_pixel color1, t_pixel color2, int total_steps, int current_
 
 void	rotate_x(t_pixel *pixel, double angle, double z_scale);
 void	rotate_y(t_pixel *pixel, double angle);
-void	rotate_z(t_pixel *pixel, double angle);
+void	rotate_z(t_pixel *pixel, double angle, double z_scale);
+
+/* ************************************************************************** */
+/* ******************************QUAT**************************************** */
+/* ************************************************************************** */
+
+t_quat	quat_init(double w, double x, double y, double z);
+t_quat quat_multiply(t_quat q1, t_quat q2);
+t_quat quat_conjugate(t_quat q);
+void	quat_rotate(t_quat q, t_pixel *pixel);
+t_quat quat_rotate_x(double angle);
+t_quat quat_rotate_y(double angle);
+t_quat quat_rotate_z(double angle);
+t_quat quat_normalize(t_quat q);
+void	quat_rotate_2(t_quat q, t_pixel *pixel);
 
 /* ************************************************************************** */
 /* ******************************INPUT*************************************** */
