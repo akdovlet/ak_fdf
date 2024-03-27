@@ -6,22 +6,17 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/26 20:07:23 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/27 14:05:59 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
 
-// # include <fcntl.h>
-// # include <unistd.h>
-// # include <math.h>
-// # include <stdio.h>
 # include "ft_printf.h"
 # include "libft.h"
 # include "mlx.h"
 # include "get_next_line.h"
-// # include <stdbool.h>
 
 # ifndef WIDTH
 # 	define WIDTH 1920
@@ -93,7 +88,7 @@ typedef struct s_data {
 int	init_mlx(t_mlx *mlx, t_img *img);
 
 // test function for drawing points on the screen
-void	draw_function(t_mlx *mlx, t_img *img, t_grid *grid, t_pixel **pixel);
+void	draw_function(t_img *img, t_grid *grid, t_pixel **pixel);
 
 // Draw black pixels everywhere
 void	background(t_img *img);
@@ -104,18 +99,21 @@ void	ak_mlx_pixel_put(t_img *data, double x, double y, unsigned int color);
 // Will draw a frame
 int	draw_frame(t_data *data);
 
+// Checks if pixel is within the window
+int	is_within_bounds(int x, int y);
+
 /* ************************************************************************** */
 /* ******************************MATH**************************************** */
 /* ************************************************************************** */
 
 // Bresenham line drawing algorythm
-void    draw_line2(t_pixel p1, t_pixel p2, t_img *img);
+void    draw_line(t_pixel p1, t_pixel p2, t_img *img);
 
 // Initialise every value to their starting points
 void	set_values(t_grid *grid);
 
 // will decide on a decent gap between each points
-double	gap_manager(t_grid *grid);
+double	gap_manager(t_grid	*grid);
 
 // will calculate the offset needed to center the drawing on the window
 void	centering(t_grid *grid, t_pixel **pixel);
@@ -124,11 +122,11 @@ void	centering(t_grid *grid, t_pixel **pixel);
 void	iso_projo(t_grid *grid, t_pixel **pixel);
 
 // int	color_gradient(int start_color, int end_color, int len, int pos);
-int color_gradient(t_pixel color1, t_pixel color2, int total_steps, int current_step);
+int color_gradient(unsigned int color1, unsigned int color2, int total_steps, int current_step);
 
 void	rotate_x(t_pixel *pixel, double angle, double z_scale);
 void	rotate_y(t_pixel *pixel, double angle);
-void	rotate_z(t_pixel *pixel, double angle, double z_scale);
+void	rotate_z(t_pixel *pixel, double angle);
 
 /* ************************************************************************** */
 /* ******************************QUAT**************************************** */

@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 14:11:44 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/26 20:02:28 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/27 14:16:45 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 int	mouse_hook(int button, int x, int y, t_data *data)
 {
+	(void)x;
+	(void)y;
 	if (button == 4)
 	{
 		data->grid.scaling *= 1.2;
@@ -41,9 +43,9 @@ int	key_hook(int keysym, t_data *data)
 	if (keysym == XK_Escape)
 		mlx_loop_end(data->mlx.mlx_ptr);
 	else if (keysym == XK_Shift_L)
-		data->grid.z *= 1.2;
+		data->grid.z += 0.1;
 	else if (keysym == XK_Control_L)
-		data->grid.z /= 1.2;
+		data->grid.z -= 0.1;
 	else if (keysym == XK_Left)
 		data->grid.x_offset -= 10;
 	else if (keysym == XK_Right)
@@ -53,13 +55,13 @@ int	key_hook(int keysym, t_data *data)
 	else if (keysym == XK_Down)
 		data->grid.y_offset += 10;
 	else if (keysym == XK_a)
-		data->grid.x_iso -= 10;
-	else if (keysym == XK_d)
-		data->grid.x_iso += 10;
-	else if (keysym == XK_w)
-		data->grid.y_iso += 10;
-	else if (keysym == XK_s)
 		data->grid.y_iso -= 10;
+	else if (keysym == XK_d)
+		data->grid.y_iso += 10;
+	else if (keysym == XK_w)
+		data->grid.x_iso += 10;
+	else if (keysym == XK_s)
+		data->grid.x_iso -= 10;
 	else if (keysym == XK_r)
 		set_values(&data->grid);
 	else if (keysym == XK_k)

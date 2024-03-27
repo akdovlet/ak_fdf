@@ -6,40 +6,36 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/17 17:53:24 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/24 16:46:09 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/27 20:35:48 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include <math.h>
+  
+// Normalize current step to range [0.0, 1.0]
+// Extract individual col1 channels
+// Calculate the blended color for each channel using linear interpolation
+// Combine the blended channels back into a single pixel value
+int color_gradient(unsigned int col1, unsigned int col2, int total_steps, int current_step)
+{
+	double			progress;
+	double	start[3];
+	double	end[3];
+	unsigned char	result[3];
 
-int color_gradient(t_pixel color1, t_pixel color2, int total_steps, int current_step) {
-  // Normalize current step to range [0.0, 1.0]
-  float progress = (float)current_step / (total_steps - 1);
-  if (color1.color == color2.color)
-	return (color1.color);
-
-  // Extract individual color channels (assuming 32-bit RGBA)
-  unsigned char red1 = (color1.color >> 24) & 0xFF;
-  unsigned char green1 = (color1.color >> 16) & 0xFF;
-  unsigned char blue1 = (color1.color >> 8) & 0xFF;
-  unsigned char alpha1 = color1.color & 0xFF;
-
-  unsigned char red2 = (color2.color >> 24) & 0xFF;
-  unsigned char green2 = (color2.color >> 16) & 0xFF;
-  unsigned char blue2 = (color2.color >> 8) & 0xFF;
-  unsigned char alpha2 = color2.color & 0xFF;
-
-  // Calculate the blended color for each channel using linear interpolation
-  unsigned char red = (unsigned char)(red1 * (1.0 - progress) + red2 * progress);
-  unsigned char green = (unsigned char)(green1 * (1.0 - progress) + green2 * progress);
-  unsigned char blue = (unsigned char)(blue1 * (1.0 - progress) + blue2 * progress);
-  unsigned char alpha = (unsigned char)(alpha1 * (1.0 - progress) + alpha2 * progress);
-
-  // Combine the blended channels back into a single pixel value
-  return (red << 24) | (green << 16) | (blue << 8) | alpha;
+	if (col1 == col2)
+		return (col1);
+	progress = (double)current_step / total_steps;
+	start[0] = (col1 >> 16) & 0xFF;
+	start[1] = (col1 >> 8) & 0xFF;
+	start[2] = col1 & 0xFF;
+	end[0] = (col2 >> 16) & 0xFF;
+	end[1] = (col2 >> 8) & 0xFF;
+	end[2] = col2 & 0xFF;
+	result[0] = (unsigned char)(start[0] * (1.0 - progress) + end[0] * progress);
+	result[1] = (unsigned char)(start[1] * (1.0 - progress) + end[1] * progress);
+	result[2] = (unsigned char)(start[2] * (1.0 - progress)+ end[2] * progress);
+	return (result[0] << 16) | (result[1] << 8) | result[2];
 }
-
-
-
 

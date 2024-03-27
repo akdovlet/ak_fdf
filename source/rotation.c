@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/23 17:01:12 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/26 19:58:28 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/27 13:41:26 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ void	rotate_y(t_pixel *pixel, double angle)
 	pixel->z[1] = n_p[2];
 }
 
-void	rotate_z(t_pixel *pixel, double angle, double z_scale)
+void	rotate_z(t_pixel *pixel, double angle)
 {
 	double	rotation[3][3];
 	double	n_p[3];

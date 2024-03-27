@@ -6,7 +6,7 @@
 #    By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 13:57:12 by akdovlet          #+#    #+#              #
-#    Updated: 2024/03/26 10:48:12 by akdovlet         ###   ########.fr        #
+#    Updated: 2024/03/27 18:37:18 by akdovlet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -23,16 +23,20 @@ SRCS :=		parsing.c		\
 			input_manager.c	\
 			parsing_utils.c	\
 			pixel_malloc.c	\
-			color.c	\
-			rotation.c	\
-			quaternions.c
+			color.c			\
+			rotation.c		\
+			quaternions.c	\
+			line_drawing.c	\
+			mlx_functions.c	\
+			display.c		\
+			math.c
 SRCS := 	$(addprefix source/, $(SRCS))
 OBJS := 	$(patsubst source/%.c, object/%.o, $(SRCS))
 DEPS := 	$(OBJS:.o=.d)
 
 
 CC := cc
-CFLAGS := -MMD -MP -Iinclude -Ilibft/include -Iprintf/include -Imlx_linux -g
+CFLAGS := -Wall -Werror -Wextra -MMD -MP -Iinclude -Ilibft/include -Iprintf/include -Imlx_linux -g
 
 all: create_dirs $(NAME)
 

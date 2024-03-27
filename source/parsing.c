@@ -6,20 +6,19 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 17:42:29 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/22 18:20:33 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/27 15:59:41 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "fdf.h"
 #include <fcntl.h>
 
 int	char_check(char c)
 {
-	if ((c >= '0' && c <= '9') || c == ',' 
+	if ((c >= '0' && c <= '9') || c == ','
 		|| c == 'X' || c == 'x' || (c >= 'a' && c <= 'f')
-			|| (c >= 'A' && c <= 'F') || c == '-')
-		return 1;
+		|| (c >= 'A' && c <= 'F') || c == '-')
+		return (1);
 	return (0);
 }
 
@@ -36,7 +35,7 @@ int	count_points(char *str)
 		{
 			count++;
 			while (str[i] && char_check(str[i]))
-				i++;		
+				i++;
 		}
 		else
 			i++;
@@ -105,43 +104,3 @@ int	file_and_parse(char *av, t_grid *grid)
 	ft_lstclear(&lst, free);
 	return (1);
 }
-
-//print the parsing data main
-// int main(int ac, char **av)
-// {
-// 	int		i;
-// 	int		j;
-// 	int		x;
-// 	int		y;
-// 	int		fd;
-// 	t_list	*lst;
-// 	t_pixel	**data;
-
-// 	i = 0;
-// 	if (ac != 2)
-// 		return (0);
-// 	fd = open(av[1], O_RDONLY);
-// 	lst = get_file(fd);
-// 	x = ak_superlen(lst, &y);
-// 	printf("x is: %d\ny is: %d\n", x, y);
-// 	data = data_parser(lst, x, y);
-// 	while (i < y)
-// 	{
-// 		j = 0;
-// 		while (j < 10)
-// 		{
-// 			printf("i is: %d\nj is: %d\n", i, j);
-// 			printf("x is: %f\n", data[i][j].x);
-// 			printf("y is: %f\n", data[i][j].y);
-// 			printf("z is: %f\n", data[i][j].z);
-// 			printf("color is: %u\n", data[i][j].color);
-// 			j++;
-// 		}
-// 		i++;
-// 	}
-// 	ft_lstclear(&lst, free);
-// 	pixel_clear(data, y);
-// 	close(fd);
-// }
-
-
