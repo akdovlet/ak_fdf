@@ -6,15 +6,16 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:08:50 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/22 18:21:16 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/28 12:37:39 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include "parsing.h"
 
 t_pixel	*data_filler(char *str, int x, int y)
 {
-	t_pixel *data;
+	t_pixel	*data;
 	int		i;
 	int		j;
 
@@ -41,18 +42,18 @@ t_pixel	*data_filler(char *str, int x, int y)
 	return (data);
 }
 
-t_pixel **data_parser(t_list *lst, int lines, int rows)
+t_pixel	**data_parser(t_list *lst, int lines, int rows)
 {
 	int		i;
 	t_pixel	**data;
-	
+
 	i = 0;
 	data = malloc(sizeof(t_pixel *) * lines);
 	if (!data)
 		return (NULL);
 	while (lst)
 	{
-		data[i] = data_filler((char*)lst->content, rows, i);
+		data[i] = data_filler((char *)lst->content, rows, i);
 		if (!data[i])
 			return (pixel_clear(data, i), NULL);
 		lst = lst->next;

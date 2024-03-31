@@ -6,27 +6,52 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:50:20 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/27 14:20:04 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/29 13:07:41 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include "parsing.h"
+
+int	domino_1(void *mlx)
+{
+	mlx_destroy_display(mlx);
+	free(mlx);
+	return (0);
+}
+
+int	domino_2(void *mlx, void *win)
+{
+	mlx_destroy_window(mlx, win);
+	mlx_destroy_display(mlx);
+	free(mlx);
+	return (0);
+}
+
+int	domino_3(void *mlx, void *img, void *win)
+{
+	mlx_destroy_image(mlx, img);
+	mlx_destroy_window(mlx, win);
+	mlx_destroy_display(mlx);
+	free(mlx);
+	return (0);
+}
 
 int	init_mlx(t_mlx *mlx, t_img *img)
 {
 	mlx->mlx_ptr = mlx_init();
 	if (!mlx->mlx_ptr)
-		return (ft_printf("Failed mlx init"), 0);
+		return (ft_printf("Failed mlx init\n"), 0);
 	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, WIDTH, HEIGHT, "Fil de Fer");
 	if (!mlx->win_ptr)
-		return (ft_printf("Failed win creation"), 0);
+		return (domino_1(mlx->mlx_ptr));
 	img->img_ptr = mlx_new_image(mlx->mlx_ptr, WIDTH, HEIGHT);
 	if (!img->img_ptr)
-		return (ft_printf("Failed img creation"), 0);
+		return (domino_2(mlx->mlx_ptr, mlx->win_ptr));
 	img->addr = mlx_get_data_addr(img->img_ptr, &img->bits_per_pixel, \
 		&img->line_length, &img->endian);
 	if (!img->addr)
-		return (ft_printf("Failed img adress init"), 0);
+		return (domino_3(mlx->mlx_ptr, img->img_ptr, mlx->win_ptr));
 	return (1);
 }
 

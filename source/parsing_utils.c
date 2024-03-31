@@ -6,11 +6,12 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:11:53 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/21 18:04:50 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/28 12:37:15 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
+#include "parsing.h"
 
 int	hex_check(char c)
 {
@@ -22,9 +23,9 @@ int	hex_check(char c)
 
 unsigned int	ak_atohex(char *str, int *i)
 {
-	long long int hex;
-	char 		*hex1;
-	char 		*hex2;
+	long long int	hex;
+	char			*hex1;
+	char			*hex2;
 
 	hex = 0;
 	hex1 = "0123456789abcdef";
@@ -51,5 +52,5 @@ unsigned int	color_manager(char *str, int *i)
 			return (ak_atohex(str, i));
 		}
 	}
-		return (0x33FF33);
+	return (0x33FF33);
 }

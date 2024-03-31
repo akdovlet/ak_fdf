@@ -6,7 +6,7 @@
 #    By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/01/01 13:57:12 by akdovlet          #+#    #+#              #
-#    Updated: 2024/03/27 18:37:18 by akdovlet         ###   ########.fr        #
+#    Updated: 2024/03/28 12:09:39 by akdovlet         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,20 +16,22 @@ LIBFT	= 	libft/libft.a
 PRINTF	=	printf/libftprintf.a
 MLX 	=	mlx_linux/libmlx.a
 
-SRCS :=		parsing.c		\
-			get_file.c		\
-			graphics.c		\
-			main.c			\
-			input_manager.c	\
-			parsing_utils.c	\
-			pixel_malloc.c	\
-			color.c			\
-			rotation.c		\
-			quaternions.c	\
-			line_drawing.c	\
-			mlx_functions.c	\
-			display.c		\
-			math.c
+SRCS := color.c			\
+		display.c		\
+		get_file.c		\
+		graphics.c		\
+		input_manager.c	\
+		line_drawing.c	\
+		main.c			\
+		math.c			\
+		matrix_init.c	\
+		mlx_functions.c	\
+		parsing.c		\
+		parsing_utils.c	\
+		pixel_malloc.c	\
+		quaternions.c	\
+		quat_utils.c	\
+		rotation.c
 SRCS := 	$(addprefix source/, $(SRCS))
 OBJS := 	$(patsubst source/%.c, object/%.o, $(SRCS))
 DEPS := 	$(OBJS:.o=.d)

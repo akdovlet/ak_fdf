@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/27 13:47:41 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/27 19:06:54 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/28 12:14:53 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,19 +27,26 @@ double	bigger(double n, double n2)
 	return (-1);
 }
 
+void	bres_init(t_pixel p1, t_pixel p2, t_bres *math)
+{
+	math->dx = fabs(p2.x[1] - p1.x[1]);
+	math->dy = fabs(p2.y[1] - p1.y[1]);
+	math->sx = bigger(p2.x[1], p1.x[1]);
+	math->sy = bigger(p2.y[1], p1.y[1]);
+	math->err = math->dx - math->dy;
+}
+
 void	draw_line(t_pixel p1, t_pixel p2, t_img *img)
 {
 	t_bres	math;
 	int		i;
 	int		len;
 
+	if (!is_within_bounds(p1.x[1], p2.y[1]))
+		return ;
 	i = 0;
-	math.dx = fabs(p2.x[1] - p1.x[1]);
-	math.dy = fabs(p2.y[1] - p1.y[1]);
+	bres_init(p1, p2, &math);
 	len = ft_max(math.dx, math.dy);
-	math.sx = bigger(p2.x[1], p1.x[1]);
-	math.sy = bigger(p2.y[1], p1.y[1]);
-	math.err = math.dx - math.dy;
 	while (i < len)
 	{
 		ak_mlx_pixel_put(img, p1.x[1], p1.y[1], \
