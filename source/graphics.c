@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/30 16:47:17 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/30 19:11:16 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/31 15:22:34 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ void	draw_function(t_img *img, t_grid *grid, t_pixel **pixel)
 		j = 0;
 		while (j < grid->rows)
 		{
-			ak_mlx_pixel_put(img, pixel[i][j].x[1], pixel[i][j].y[1], pixel[i][j].color);
+			ak_mlx_pixel_put(img, pixel[i][j].x[1], pixel[i][j].y[1], \
+				pixel[i][j].color);
 			if (j + 1 < grid->rows)
 				draw_line(pixel[i][j], pixel[i][j + 1], img);
 			if (i + 1 < grid->lines)

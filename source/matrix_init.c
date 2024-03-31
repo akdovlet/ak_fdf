@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 11:56:52 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/30 19:09:32 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/03/31 15:22:12 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,4 +66,3 @@ void	matrix_z(double rotation[3][3], double angle)
 	rotation[2][1] = 0;
 	rotation[2][2] = 1;
 }
-
