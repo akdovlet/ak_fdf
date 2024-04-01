@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 12:34:26 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/28 12:40:58 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/04/01 19:38:59 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,9 @@ t_list			*get_file(int fd);
 // read the file and call every parsing function
 int				file_and_parse(char *av, t_grid *grid);
 
+// Checks that the given file is in *.fdf format
+int	extension_checker(char *str);
+
 // function that will parse a line in a map and 
 // return how many points are in there
 // used by ak_superlen();
@@ -35,7 +38,7 @@ int				count_points(char *str);
 int				char_check(char c);
 
 // super function to count total points, lines and rows in a given map
-// pointers to int used to return multiple values in one functino call
+// pointers to int used to return multiple values in one function call
 // not arrays!
 int				ak_superlen(t_list *lst, int *line, int *rows);
 

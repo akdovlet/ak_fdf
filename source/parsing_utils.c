@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:11:53 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/28 12:37:15 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/04/01 19:56:09 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,28 @@ unsigned int	color_manager(char *str, int *i)
 		}
 	}
 	return (0x33FF33);
+}
+
+int	extension_checker(char *str)
+{
+	int		i;
+	int		j;
+	char	*fdf;
+	int		found;
+
+	found = 0;
+	i = ft_strlen(str);
+	if (i < 5)
+		return (0);
+	fdf = ".fdf";
+	i -= 4;
+	j = 0;
+	while (str[i] && (str[i] == fdf[j]))
+	{
+		j++;
+		i++;
+		if (!fdf[j])
+			return (1);
+	}
+	return (0);
 }
