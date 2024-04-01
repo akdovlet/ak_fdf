@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/30 19:07:15 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/04/01 20:15:35 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,10 +133,6 @@ void	rotate_z(t_pixel *pixel, double angle);
 void	matrix_x(double rotation[3][3], double angle);
 void	matrix_y(double rotation[3][3], double angle);
 void	matrix_z(double rotation[3][3], double angle);
-void	matrix_z_iso(double rotation[3][3], double angle);
-void	matrix_x_iso(double rotation[3][3], double angle);
-// void	matrix_y_iso(double rotation[3][3], double angle);
-
 
 /* ************************************************************************** */
 /* ******************************QUAT**************************************** */

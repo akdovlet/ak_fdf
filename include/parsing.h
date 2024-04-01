@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/28 12:34:26 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/04/01 19:38:59 by akdovlet         ###   ########.fr       */
+/*   Updated: 2024/04/01 20:16:07 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ t_list			*get_file(int fd);
 int				file_and_parse(char *av, t_grid *grid);
 
 // Checks that the given file is in *.fdf format
-int	extension_checker(char *str);
+int				extension_checker(char *str);
 
 // function that will parse a line in a map and 
 // return how many points are in there
