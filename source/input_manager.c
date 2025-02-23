@@ -6,12 +6,13 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 14:11:44 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/03/30 19:34:44 by akdovlet         ###   ########.fr       */
+/*   Updated: 2025/02/23 01:02:19 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 #include "X11/keysym.h"
+#include "X11/X.h"
 
 int	mouse_hook(int button, int x, int y, t_data *data)
 {
@@ -31,9 +32,10 @@ int	mouse_hook(int button, int x, int y, t_data *data)
 
 void	handle_input(t_data *data)
 {
-	mlx_key_hook(data->mlx.win_ptr, key_hook, data);
+	// mlx_key_hook(data->mlx.win_ptr, key_hook, data);
 	mlx_mouse_hook(data->mlx.win_ptr, mouse_hook, data);
 	mlx_hook(data->mlx.win_ptr, 17, 0, x_button, data);
+	mlx_hook(data->mlx.win_ptr, KeyPress, KeyPressMask, key_hook, data);
 }
 
 void	controller_one(int keysym, t_data *data)

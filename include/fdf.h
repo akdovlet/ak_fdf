@@ -6,12 +6,14 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/02 11:43:35 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/04/01 20:15:35 by akdovlet         ###   ########.fr       */
+/*   Updated: 2025/02/23 01:13:56 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef FDF_H
 # define FDF_H
+
+# include <math.h>
 
 # include "ft_printf.h"
 # include "libft.h"

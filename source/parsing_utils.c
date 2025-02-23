@@ -6,7 +6,7 @@
 /*   By: akdovlet <akdovlet@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/15 16:11:53 by akdovlet          #+#    #+#             */
-/*   Updated: 2024/04/01 19:56:09 by akdovlet         ###   ########.fr       */
+/*   Updated: 2025/02/23 00:55:46 by akdovlet         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,7 @@ int	extension_checker(char *str)
 	int		i;
 	int		j;
 	char	*fdf;
-	int		found;
 
-	found = 0;
 	i = ft_strlen(str);
 	if (i < 5)
 		return (0);
